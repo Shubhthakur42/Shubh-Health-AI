@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubh · AI Health Companion</title>
+    <!-- Tailwind via CDN + custom smooth layers -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font & subtle icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- additional micro-interactions -->
+    <style>
+        * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .glow-focus:focus-within { box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2); }
+        .transition-smooth { transition: all 0.2s ease-out; }
+        .bg-subtle-dots { background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 24px 24px; }
+        .card-hover { transition: transform 0.1s ease, box-shadow 0.2s; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.02); }
+        .animate-slide-up { animation: slideUpFade 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); }
+        @keyframes slideUpFade { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+        .voice-pulse { animation: pulseShadow 1.5s infinite; }
+        @keyframes pulseShadow { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    </style>
+</head>
+<body class="bg-slate-50/80 antialiased flex flex-col min-h-screen">
+
+    <!-- ========== REFRESHED HEADER – minimal, airy, confident ========= -->
+    <header class="bg-gradient-to-br from-emerald-500/90 to-teal-600/90 text-white px-4 sm:px-6 lg:px-8 py-6 lg:py-8 shadow-xl rounded-b-[2.5rem] mb-10 lg:mb-12">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-12">
+            <!-- left icon (decorative) -->
+            <div class="hidden lg:block w-44 h-44 bg-white/10 backdrop-blur-sm rounded-3xl p-4 border border-white/20 shadow-inner">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='40' r='20' fill='%23ffffff40'/%3E%3Cpath d='M25 70 L50 90 L75 70' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' /%3E%3C/svg%3E" alt="health guardian icon" class="w-full h-full opacity-80">
+            </div>
+            <!-- main headline -->
+            <div class="text-center lg:text-left max-w-2xl">
+                <div class="inline-flex items-center justify-center w-14 h-14 bg-white/20 backdrop-blur rounded-2xl mb-5 shadow-soft">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-3">hello, i'm <span class="text-emerald-100">Shubh</span></h1>
+                <p class="text-lg text-emerald-50/90 max-w-xl mx-auto lg:mx-0 leading-relaxed">Your thoughtful AI triage companion — describe how you feel, and i’ll help you understand possible next steps.</p>
+                <!-- badge row -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 mt-5 text-sm font-medium text-white/80">
+                    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3"></path><circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"></circle></svg>24/7</span>
+                    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>private</span>
+                    <span class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-full"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9"></path></svg>free</span>
+                </div>
+            </div>
+            <!-- right graphic (calm illustration) -->
+            <div class="hidden lg:block w-48 h-48 bg-white/10 backdrop-blur-sm rounded-3xl p-5 border border-white/20">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='50' r='24' fill='%23f0fdfa' opacity='0.2' /%3E%3Cpath d='M30 80 L60 100 L90 80' stroke='white' stroke-width='5' fill='none' stroke-linecap='round' /%3E%3C/svg%3E" class="w-full h-full opacity-80">
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-8 flex-1">
+        <!-- LEFT ASIDE – refined micro‑copy + calm tips -->
+        <aside class="hidden lg:block lg:col-span-3 space-y-6">
+            <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-emerald-100/40 shadow-md card-hover">
+                <h3 class="text-base font-semibold text-emerald-900 flex items-center gap-2 mb-5">
+                    <span class="bg-emerald-100 p-1.5 rounded-xl"><svg class="w-4 h-4 text-emerald-700" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg></span>
+                    better description = better guidance
+                </h3>
+                <ul class="space-y-4 text-sm text-slate-700">
+                    <li class="flex gap-2.5"><span class="text-emerald-500 font-bold text-base leading-5">●</span><span><span class="font-semibold text-slate-800">be specific</span> — “stabbing pain behind left eye” rather than “head hurts”</span></li>
+                    <li class="flex gap-2.5"><span class="text-emerald-500 font-bold text-base leading-5">●</span><span><span class="font-semibold text-slate-800">mention duration</span> — started 2 days ago? after a fall?</span></li>
+                    <li class="flex gap-2.5"><span class="text-emerald-500 font-bold text-base leading-5">●</span><span><span class="font-semibold text-slate-800">note severity</span> — mild, throbbing, or unbearable</span></li>
+                    <li class="flex gap-2.5"><span class="text-emerald-500 font-bold text-base leading-5">●</span><span><span class="font-semibold text-slate-800">add context</span> — fever, cough, recent travel?</span></li>
+                </ul>
+            </div>
+            <div class="bg-gradient-to-br from-indigo-50 to-sky-50 rounded-2xl p-6 border border-indigo-100/50 shadow-sm">
+                <h3 class="font-semibold text-indigo-900 mb-2 text-base">🌿 our mission</h3>
+                <p class="text-sm text-indigo-800/80 leading-relaxed">To offer calm, accessible orientation — especially if you’re unsure whether to rest, call a clinic, or seek urgent care. Always double‑check with a professional.</p>
+            </div>
+        </aside>
+
+        <!-- CENTER COLUMN – main interaction card + response -->
+        <div class="lg:col-span-6 space-y-6">
+            <!-- symptom input card – fresh & spacious -->
+            <div class="bg-white/90 backdrop-blur-sm rounded-3xl p-7 shadow-lg border border-emerald-100/60 card-hover transition-smooth">
+                <div class="flex items-center gap-2 mb-1">
+                    <h2 class="text-xl font-bold text-slate-800">How are you feeling?</h2>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-medium">confidential</span>
+                </div>
+                <p class="text-sm text-slate-500 mb-5">Describe your symptoms – the more detail, the clearer the insight.</p>
+                
+                <div class="glow-focus rounded-2xl transition-all">
+                    <textarea id="symptoms-input" rows="4" class="w-full p-5 text-sm border border-slate-200 bg-slate-50/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-300/70 focus:border-transparent resize-none transition-smooth" placeholder="e.g. I’ve had a sore throat and mild cough for 3 days, no fever..."></textarea>
+                </div>
+
+                <!-- input related actions + language + voice -->
+                <div class="mt-6 space-y-5">
+                    <!-- top row: note & main buttons -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <p class="text-xs text-slate-400 flex items-center gap-1.5"><span class="w-1 h-1 bg-slate-300 rounded-full"></span>not a diagnosis — always consult a doctor</p>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button id="voice-button" title="Voice input" class="p-3.5 bg-white border border-slate-200 text-slate-600 rounded-xl hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-all shadow-sm active:scale-95">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.5a6 6 0 006-6v-1m-6 7a6 6 0 01-6-6v-1m6 7v2m-4 0h8m-8-12V5a2 2 0 114 0v3.5" /><path d="M19 10v1a7 7 0 01-14 0v-1" /></svg>
+                            </button>
+                            <button id="analyze-button" class="flex-1 sm:flex-none flex items-center justify-center px-7 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-semibold rounded-xl shadow-md hover:from-emerald-700 hover:to-teal-600 transition-all active:scale-[0.98] disabled:from-slate-400 disabled:to-slate-400 disabled:cursor-not-allowed">
+                                <svg id="send-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                <svg id="spinner-icon" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <span id="button-text">Analyze</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- language selectors – tidier and inline -->
+                    <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200/70">
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-medium text-slate-500 ml-1">🎤 voice language</label>
+                            <select id="language-select" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl px-3 py-2.5 focus:ring-emerald-300 focus:border-emerald-300">
+                                <option value="en-US">English (US)</option><option value="hi-IN">हिन्दी</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label class="text-xs font-medium text-slate-500 ml-1">🌐 AI reply in</label>
+                            <select id="output-language-select" class="bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl px-3 py-2.5 focus:ring-emerald-300 focus:border-emerald-300">
+                                <option value="English">English</option><option value="Hindi">हिन्दी</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p id="voice-status" class="text-xs text-center text-emerald-600 h-4 font-medium"></p>
+                </div>
+            </div>
+            
+            <!-- RESPONSE CARD – appears after analysis, with TTS & clean typography -->
+            <div id="response-container" class="bg-white rounded-3xl p-7 shadow-lg border border-emerald-100/70 hidden animate-slide-up">
+                <div class="flex items-center justify-between flex-wrap gap-3 mb-3">
+                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2"><span class="w-1.5 h-6 bg-emerald-400 rounded-full"></span>Shubh's insight</h3>
+                    <!-- TTS controls integrated nicely -->
+                    <div id="tts-controls" class="flex items-center gap-2 bg-slate-50 p-1 rounded-full border border-slate-200">
+                        <button id="read-aloud-button" title="Listen" class="p-2.5 bg-white rounded-full text-slate-600 hover:bg-emerald-500 hover:text-white transition-all shadow-xs">
+                            <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <svg id="stop-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9 10a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1zm6 0a1 1 0 011 1v2a1 1 0 11-2 0v-2a1 1 0 011-1z" /></svg>
+                        </button>
+                        <select id="voice-select-tts" class="text-xs bg-transparent border-0 text-slate-600 font-medium focus:ring-0 pr-6"></select>
+                    </div>
+                </div>
+                <div id="ai-response" class="prose prose-emerald prose-sm max-w-none text-slate-700 leading-relaxed"></div>
+            </div>
+
+            <!-- error container – subtle yet visible -->
+            <div id="error-container" class="bg-amber-50 p-5 rounded-2xl text-amber-800 text-sm border border-amber-200 hidden items-center gap-3">
+                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.364 11.035c.674 1.167-.167 2.62-1.515 2.62H3.636c-1.348 0-2.189-1.453-1.515-2.62L8.485 2.495zM10 5a1 1 0 011 1v4a1 1 0 11-2 0V6a1 1 0 011-1zm1 8a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"/></svg>
+                <span id="error-message"></span>
+            </div>
+        </div>
+
+        <!-- RIGHT ASIDE – emergency & wellness note, redesigned soft but clear -->
+        <aside class="mt-8 lg:mt-0 lg:col-span-3 space-y-6">
+            <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-base font-bold text-amber-900 flex items-center gap-2 mb-3">
+                    <span class="bg-amber-200 p-1.5 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-amber-800" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg></span>
+                    urgent? go to ER
+                </h3>
+                <p class="text-xs text-amber-800/80 font-medium mb-3">stop if you experience:</p>
+                <ul class="space-y-2 text-sm text-amber-900/90">
+                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5"></span><span>chest pain / pressure</span></li>
+                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5"></span><span>difficulty breathing</span></li>
+                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5"></span><span>sudden numbness, confusion</span></li>
+                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5"></span><span>uncontrolled bleeding</span></li>
+                    <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-1.5"></span><span>severe head injury</span></li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h3 class="font-semibold text-slate-800 flex items-center gap-2 text-base"><span class="text-xl">💤</span> did you know?</h3>
+                <p class="text-sm text-slate-600 mt-2 leading-relaxed">Quality sleep (7–9 h) strengthens immunity and mental clarity. Even one extra hour can reduce stress and improve recovery.</p>
+            </div>
+            <!-- tiny extra detail: breathing hint -->
+            <div class="bg-emerald-50/70 p-5 rounded-2xl border border-emerald-100">
+                <p class="text-xs text-emerald-800 flex items-center gap-2"><span class="text-lg">🌱</span> “rest & hydrate” are often the best first aid.</p>
+            </div>
+        </aside>
+    </main>
+
+    <footer class="text-center py-12 px-4 mt-16 border-t border-slate-200/80">
+        <p class="text-xs text-slate-400 max-w-xl mx-auto leading-relaxed">
+            ⚕️ Shubh is an AI assistant for informational purposes only. It does not replace professional medical advice, diagnosis, or treatment.
+        </p>
+        <p class="mt-8 text-xs text-slate-300 font-medium tracking-wide">Shubh Health AI · by Shubham Kumar · always listening, never judging</p>
+    </footer>
+
+    <script>
+        (function(){
+            // --- DOM ELEMENTS (with modern aliases)---
+            const analyzeBtn = document.getElementById('analyze-button');
+            const symptomField = document.getElementById('symptoms-input');
+            const responseCard = document.getElementById('response-container');
+            const aiResponseDiv = document.getElementById('ai-response');
+            const errorBox = document.getElementById('error-container');
+            const errorMsgSpan = document.getElementById('error-message');
+            const btnText = document.getElementById('button-text');
+            const sendIcon = document.getElementById('send-icon');
+            const spinner = document.getElementById('spinner-icon');
+            const voiceBtn = document.getElementById('voice-button');
+            const langSelect = document.getElementById('language-select');
+            const voiceStatus = document.getElementById('voice-status');
+            const ttsSelect = document.getElementById('voice-select-tts');
+            const readBtn = document.getElementById('read-aloud-button');
+            const playIcon = document.getElementById('play-icon');
+            const stopIcon = document.getElementById('stop-icon');
+            const outputLang = document.getElementById('output-language-select');
+
+            // --- API (unchanged but kept functional)
+            const API_KEY = 'b8675f66-ebcf-44d1-8425-7c1ddb87ed56';
+            const API_URL = 'https://api.sambanova.ai/v1/chat/completions';
+            const MODEL_NAME = 'Llama-4-Maverick-17B-128E-Instruct';
+
+            // --- TTS setup
+            const synth = window.speechSynthesis;
+            let voices = [];
+            function populateVoiceList() {
+                voices = synth.getVoices();
+                ttsSelect.innerHTML = '';
+                voices.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.textContent = `${v.name} (${v.lang})`;
+                    opt.setAttribute('data-name', v.name);
+                    ttsSelect.appendChild(opt);
+                });
+            }
+            if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = populateVoiceList;
+            setTimeout(populateVoiceList, 100); // fallback
+
+            function speakNow(text) {
+                if (synth.speaking) synth.cancel();
+                if (!text) return;
+                const utterance = new SpeechSynthesisUtterance(text);
+                const selectedName = ttsSelect.selectedOptions[0]?.getAttribute('data-name');
+                if (selectedName) utterance.voice = voices.find(v => v.name === selectedName);
+                utterance.onstart = () => { playIcon.classList.add('hidden'); stopIcon.classList.remove('hidden'); };
+                utterance.onend = utterance.onerror = () => { playIcon.classList.remove('hidden'); stopIcon.classList.add('hidden'); };
+                synth.speak(utterance);
+            }
+
+            readBtn.addEventListener('click', () => {
+                if (synth.speaking) { synth.cancel(); } else { speakNow(aiResponseDiv.textContent || ''); }
+            });
+
+            // --- Voice recognition
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let recognition;
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.onstart = () => { voiceStatus.textContent = '🎙️ listening...'; voiceBtn.classList.add('voice-pulse', 'bg-emerald-100'); };
+                recognition.onresult = (e) => { symptomField.value = e.results[0][0].transcript; };
+                recognition.onerror = (e) => { voiceStatus.textContent = `mic error: ${e.error}`; };
+                recognition.onend = () => { voiceStatus.textContent = ''; voiceBtn.classList.remove('voice-pulse', 'bg-emerald-100'); };
+                voiceBtn.addEventListener('click', () => { recognition.lang = langSelect.value; recognition.start(); });
+            } else {
+                voiceBtn.style.display = 'none';
+                langSelect.style.display = 'none';
+                voiceStatus.textContent = "🎤 not supported";
+            }
+
+            // --- helpers
+            function setLoading(loading) {
+                analyzeBtn.disabled = loading;
+                btnText.textContent = loading ? 'analyzing...' : 'Analyze';
+                sendIcon.classList.toggle('hidden', loading);
+                spinner.classList.toggle('hidden', !loading);
+            }
+            function showError(msg) { errorMsgSpan.textContent = msg; errorBox.classList.remove('hidden'); }
+            function hideError() { errorBox.classList.add('hidden'); }
+
+            // --- analyze click
+            analyzeBtn.addEventListener('click', async () => {
+                if (synth.speaking) synth.cancel();
+                const symptoms = symptomField.value.trim();
+                if (!symptoms) { showError('please describe your symptoms first'); return; }
+
+                setLoading(true);
+                hideError();
+                responseCard.classList.add('hidden');
+
+                try {
+                    const langInstr = outputLang.value === 'Hindi' ? 'IMPORTANT: Give the entire response in Hindi language.' : '';
+                    const fullPrompt = `You are a kind, cautious AI healthcare triage assistant. Based on symptoms: "${symptoms}", offer gentle guidance. Never diagnose. Suggest possible causes generally and advise on seeking care (self-care, GP, emergency). Emphasize this is not medical advice. ${langInstr}`;
+
+                    const res = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
+                        body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: 'user', content: fullPrompt }] })
+                    });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const data = await res.json();
+                    const reply = data.choices?.[0]?.message?.content;
+                    if (!reply) throw new Error('empty response');
+                    
+                    aiResponseDiv.innerHTML = reply.replace(/\n/g, '<br>');
+                    aiResponseDiv.textContent = reply; // for TTS
+                    responseCard.classList.remove('hidden');
+                } catch (err) {
+                    console.error(err);
+                    showError('Sorry, connection issue. Check API or try later.');
+                } finally {
+                    setLoading(false);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
